@@ -27,20 +27,32 @@ function setWebhook() {
 
 
 
-
+function demoPost(){
+  doPost({postData:{contents:"{\"update_id\":666346671,\n\"message\":{\"message_id\":11,\"from\":{\"id\":986383258,\"is_bot\":false,\"first_name\":\"d\",\"username\":\"DAVlDST\",\"language_code\":\"en\"},\"chat\":{\"id\":986383258,\"first_name\":\"d\",\"username\":\"DAVlDST\",\"type\":\"private\"},\"date\":1630277900,\"text\":\"/start\",\"entities\":[{\"offset\":0,\"length\":6,\"type\":\"bot_command\"}]}}"}});
+}
 
 
 function doPost(e) {
   var c = JSON.parse(e.postData.contents);
-  var id = c.message.chat.id;
+  var id;
+  if(c.message){
+    if(c.message.chat)id = c.message.chat.id;
+    else if (c.message.from)id = c.message.from.id;
+  }else if(c.callback_query){
+    id = c.callback_query.from.id;
+  }
+  
   sendText(id,"decorator working")
   var data = {
     method: "post",
-    payload: e.postData.contents
+    payload: e.postData.contents,
+    muteHttpExceptions: true,
   };
   var r = UrlFetchApp.fetch(otherWebApp,data);
-  sendText(id,`content: ${r.getContentText()}
-  code: ${r.getResponseCode()}`);
+  if(r.getResponseCode()!=200){
+    var c = Cheerio.load(r.getContentText());
+    sendText(id,"Error: "+ c(c('div')[1]).text());
+  }
 }
 
 /*function setWebhook() {
