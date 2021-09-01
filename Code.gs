@@ -49,10 +49,8 @@ function doPost(e) {
     muteHttpExceptions: true,
   };
   var r = UrlFetchApp.fetch(otherWebApp,data);
-  if(r.getResponseCode()!=200){
-    var c = Cheerio.load(r.getContentText());
-    sendText(id,"Error: "+ c(c('div')[1]).text());
-  }
+  var c = Cheerio.load(r.getContentText());
+  sendText(id,"response: "+ c(c('div')[1]).text());
 }
 
 /*function setWebhook() {
