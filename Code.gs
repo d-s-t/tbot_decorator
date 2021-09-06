@@ -25,11 +25,15 @@ var url = "https://api.telegram.org/bot" + token;
 var otherWebApp = "";
 
 /**
+ * the web app url for this script.
+ */
+var thisWebApp = "";
+
+/**
  * extra debugging, flag if to print (send as message in telegram) the request sent by telegram.
  * useful for chaking what is sent to deside how to write the code.
  */
 var PRINT_POST_DATA = false;
-
 
 
 
@@ -96,7 +100,7 @@ function doPost(e) {
  * set this script as the webhook of the bot with token (global var)
  */
 function setWebhook() {
-  var response =  UrlFetchApp.fetch(url + "/setWebhook?url=" + ScriptApp.getService().getUrl());
+  var response =  UrlFetchApp.fetch(url + "/setWebhook?url=" + thisWebApp);
   Logger.log(response.getContentText());
 }
 
